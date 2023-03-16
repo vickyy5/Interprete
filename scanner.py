@@ -34,11 +34,13 @@ class Scanner:
 
         estado = 0
 
-        for index,line in enumerate(self.source):
+        for line in self.source:
             current = ""
-            #while control:
-            for char in line:
-                print(f"{estado} -> {char}")
+            line1 = self.clean(line)
+            line1 +=" "
+            print(f"{line1}")
+            for char in line1:
+                #print(f"{estado} -> {char}")
                 match estado:
                     case 0:
                         if char == "<":
@@ -57,33 +59,31 @@ class Scanner:
                             pass
                     case 1:
                         if char == "=":
-                            self.tokens.append(Token(TipoToken.MENORIGUAL,"<=",None,index))
+                            self.tokens.append(Token(TipoToken.MENORIGUAL,"<=",None,self.__linea))
                             estado = 0
                         else:
-                            self.tokens.append(Token(TipoToken.MENOR,"<",None,index))
+                            self.tokens.append(Token(TipoToken.MENOR,"<",None,self.__linea))
                             estado = 0
                     case 2:
                         if char == "=":
-                            self.tokens.append(Token(TipoToken.IGUALQUE,"==",None,index))
+                            self.tokens.append(Token(TipoToken.IGUALQUE,"==",None,self.__linea))
                             estado = 0
                         else:
-                            self.tokens.append(Token(TipoToken.ASIGNACION,"=",None,index))
+                            self.tokens.append(Token(TipoToken.ASIGNACION,"=",None,self.__linea))
                             estado = 0
                     case 3:
                         if char == "=":
-                            self.tokens.append(Token(TipoToken.MAYORIGUAL,">=",None,index))
+                            self.tokens.append(Token(TipoToken.MAYORIGUAL,">=",None,self.__linea))
                             estado = 0
                         else:
-                            self.tokens.append(Token(TipoToken.MAYOR,">",None,index))
+                            self.tokens.append(Token(TipoToken.MAYOR,">",None,self.__linea))
                             estado=0
                         pass
                     case 4:
-                        if char.isdigit():
-                            current += char
-                        elif char == ".":
+                        if char.isdigit() or char == ".":
                             current += char
                         else:
-                            self.tokens.append(Token(TipoToken.NUMERO,current,current,index))
+                            self.tokens.append(Token(TipoToken.NUMERO,current,current,self.__linea))
                             current = ""
                             estado = 0
                     case 5:
@@ -91,25 +91,100 @@ class Scanner:
                             current += char
                         else:
                             if current in self.palabras_reservadas:
-                                self.tokens.append(Token(self.palabras_reservadas[current],current,None,index))
+                                self.tokens.append(Token(self.palabras_reservadas[current],current,None,self.__linea))
                                 current = ""
                                 estado = 0
                             else:
-                                self.tokens.append(Token(TipoToken.IDENTIFICADOR,current,None,index))
+                                self.tokens.append(Token(TipoToken.IDENTIFICADOR,current,None,self.__linea))
                                 current = ""
                                 estado = 0
+            self.__linea += 1
                         
-                        
-        self.tokens.append(Token(TipoToken.EOF,None,None,None))
+        self.tokens.append(Token(TipoToken.EOF,None,None,self.__linea))
         return self.tokens
-                     
 
-        #tokens.add(token) 
-        #return token
-        pass
+    def clean(self,cadena):
+        simbolos = ['(', ')' ,'{' ,'}', '=', '<', '>', '!', '+', '-', ';', '*', '/', "'"]
+        clean_str = ''
+        current = ''
+        control = True
+        estado = 0
+        char = 0
+        cadena = cadena.replace(" ","")
+        #print(f"*{cadena}*")
+        while control:
+            match estado:
+                case 0:
+                    try:
+                        if cadena[char] in simbolos:
+                            current = cadena[char]
+                            estado = 1
+                        elif cadena[char].isdigit():
+                            current = cadena[char]
+                            estado = 2
+                        elif cadena[char].isalpha():
+                            current += cadena[char]
+                            estado = 3
+                        else:
+                            control = False
+                    except:
+                        control = False
+                case 1:
+                    try:
+                        if cadena[char+1] in simbolos:
+                            current += cadena[char+1]
+                            char +=1
+                            estado = 1
+                        else:
+                            clean_str += f" {current}"
+                            current = ""
+                            char += 1
+                            estado = 0
+                    except:
+                        clean_str += f" {current} "
+                        current = ""
+                        char += 1
+                        estado = 0
+                        control = False
 
-    def automata(self):
-        pass 
+                case 2:
+                    try:
+                        if cadena[char+1].isdigit() or cadena[char+1] == ".":
+                            #print(cadena[char+1])
+                            current += cadena[char+1]
+                            char +=1
+                        else:
+                            #print(cadena[char+1])
+                            clean_str += f" {current}"
+                            current = ""
+                            char += 1
+                            estado = 0
+                    except:
+                        clean_str += f" {current}"
+                        current = ""
+                        char += 1
+                        estado = 0
+                        control = False
+                case 3:
+                    try:
+                        if cadena[char+1].isalpha() or cadena[char+1].isdigit():
+                            current += cadena[char+1]
+                            char += 1
+                        else:
+                            clean_str += f" {current} "
+                            current = ""
+                            char += 1
+                            estado = 0
+                    except:
+                        control = False
+            #print(f"{clean_str} estado={estado}")
+            
+        #print(f"{clean_str} estado={estado}")
+        #print(clean_str)
+        return clean_str
+
+
+
 
 
         

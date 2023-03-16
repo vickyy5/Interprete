@@ -40,7 +40,7 @@ class TipoToken(Enum):
     MAYORIGUAL = ">="
     COMENTARIO = "//" # -> comentarios (no se genera token)
     MULTICOMEN = "/* ... * /"  #-> comentarios (no se genera token)
-    NUMERO = ""
+    NUMERO = "NUM"
     IDENTIFICADOR = "ID"
     #Identificador,
     #Cadena
