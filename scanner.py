@@ -40,7 +40,7 @@ class Scanner:
             line1 +=" "
             print(f"{line1}")
             for char in line1:
-                #print(f"{estado} -> {char}")
+                print(f"{estado} -> {char}")
                 match estado:
                     case 0:
                         if char == "<":
@@ -54,7 +54,9 @@ class Scanner:
                            estado = 4
                         elif char.isalpha():
                             current += char
-                            estado = 5 
+                            estado = 5
+                        elif char == "/":
+                            estado = 6
                         else:
                             pass
                     case 1:
@@ -98,6 +100,20 @@ class Scanner:
                                 self.tokens.append(Token(TipoToken.IDENTIFICADOR,current,None,self.__linea))
                                 current = ""
                                 estado = 0
+                    case 6:
+                        if char == "/":
+                            #print("2 slash")
+                            estado = 7
+                        else:
+                            #print("1 slash")
+                            self.tokens.append(Token(TipoToken.ENTRE,"/",None,self.__linea))
+                    case 7:
+                        if char == "\n":
+                            print("Found break")
+                            estado = 0
+                        else:
+                            estado = 7
+
             self.__linea += 1
                         
         self.tokens.append(Token(TipoToken.EOF,None,None,self.__linea))
@@ -181,7 +197,8 @@ class Scanner:
             
         #print(f"{clean_str} estado={estado}")
         #print(clean_str)
-        return clean_str
+        return f"{clean_str}\n"
+        #return clean_str
 
 
 
