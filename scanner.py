@@ -38,7 +38,7 @@ class Scanner:
             current = ""
             line1 = self.clean(line)
             line1 +=" "
-            print(f"{line1}")
+            #print(f"{line1}")
             for char in line1:
                 #print(f"{estado} -> {char}")
                 match estado:
@@ -80,6 +80,15 @@ class Scanner:
                             estado = 0
                         elif char == "!":
                             estado = 8
+                        elif char == '"':
+                            current += char
+                            estado = 9
+                        elif char == ";":
+                            self.tokens.append(Token(TipoToken.PYCOMA,";",None,self.__linea))
+                            estado = 0
+                        elif char == ",":
+                            self.tokens.append(Token(TipoToken.COMA,",",None,self.__linea))
+                            estado = 0
                         else:
                             pass
                     case 1:
@@ -126,6 +135,8 @@ class Scanner:
                     case 6:
                         if char == "/":
                             estado = 7
+                        elif char == "*":
+                            estado = 11
                         else:
                             self.tokens.append(Token(TipoToken.ENTRE,"/",None,self.__linea))
                             estado = 0
@@ -141,14 +152,31 @@ class Scanner:
                         else:
                             self.tokens.append(Token(TipoToken.NEGA,"!",None,self.__linea))
                             estado = 0
+                    case 9:
+                        if char == '"':
+                            current += char
+                            self.tokens.append(Token(TipoToken.IDENTIFICADOR,current,current[1:-1],self.__linea))
+                            current = ""
+                            estado = 0
+                        else:
+                            current += char
+                            #estado = 9
+                    case 11:
+                        if char == "*":
+                            estado = 12
+                    case 12:
+                        if char == "/":
+                            estado = 0
+                        else:
+                            estado = 11
 
             self.__linea += 1
                         
-        self.tokens.append(Token(TipoToken.EOF,None,None,self.__linea))
+        self.tokens.append(Token(TipoToken.EOF,None,None,self.__linea-1))
         return self.tokens
 
     def clean(self,cadena):
-        simbolos = ['(', ')' ,'{' ,'}', '=', '<', '>', '!', '+', '-', ';', '*', '/', "'"]
+        simbolos = ['(', ')' ,'{' ,'}', '=', '<', '>', '!', '+', '-', ';', '*', '/']
         clean_str = ''
         current = ''
         control = True
@@ -169,6 +197,9 @@ class Scanner:
                         elif cadena[char].isalpha():
                             current += cadena[char]
                             estado = 3
+                        elif cadena[char] == '"':
+                            current += cadena[char]
+                            estado = 4
                         else:
                             control = False
                     except:
@@ -197,6 +228,11 @@ class Scanner:
                             #print(cadena[char+1])
                             current += cadena[char+1]
                             char +=1
+                        elif cadena[char+1] == ",":
+                            clean_str += f" {current} ,"
+                            char += 2
+                            current = ""
+                            estado = 0
                         else:
                             #print(cadena[char+1])
                             clean_str += f" {current}"
@@ -214,10 +250,27 @@ class Scanner:
                         if cadena[char+1].isalpha() or cadena[char+1].isdigit():
                             current += cadena[char+1]
                             char += 1
+                        elif cadena[char+1] == ",":
+                            clean_str += f" {current} ,"
+                            char += 2
+                            current = ""
+                            estado = 0
                         else:
                             clean_str += f" {current} "
                             current = ""
                             char += 1
+                            estado = 0
+                    except:
+                        control = False
+                case 4:
+                    try:
+                        if cadena[char+1] != '"':
+                            current += cadena[char+1]
+                            char +=1
+                        else:
+                            clean_str += f' {current}" '
+                            current = ""
+                            char +=1
                             estado = 0
                     except:
                         control = False
