@@ -1,6 +1,7 @@
 from tipo_token import TipoToken
 
 class Token:
+    # Clase para representar los tokens encontrados por el scanner
 
     def __init__(self,tipo:TipoToken,lexema:str,literal,linea:int) -> None:
         self.tipo = tipo
@@ -10,5 +11,5 @@ class Token:
     
     def __repr__(self) -> str:
         return f"<{self.tipo}, lexema:{self.lexema}, literal:{self.literal}, linea:{self.linea}>"
-                 # <TipoToken.FUN: 'fun'>    
+        # <TipoToken.FUN: 'fun'>    
 

@@ -1,6 +1,7 @@
-from enum import Enum
+from enum import Enum # importar la clase Enum del módulo enum
 
 class TipoToken(Enum):
+    # crear una clase TipoToken que hereda de Enum instanciar objetos de la clase TipoToken con su valor correspondiente
     Y ="y"
     CLASE = "clase"
     ADEMAS = "ademas"
@@ -42,6 +43,7 @@ class TipoToken(Enum):
     MULTICOMEN = "/* ... * /"  #-> comentarios (no se genera token)
     NUMERO = "NUM"
     IDENTIFICADOR = "ID"
+
     #Identificador,
     #Cadena
     #Numero

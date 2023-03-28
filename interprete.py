@@ -4,11 +4,15 @@ import tokeen
 import sys
 
 class Interprete:
+    # Clase principal del intérprete
+
     def __init__(self) -> None:
         self.existenErrores = False
 
                 
     def ejecutarArchivo(self,archivo):
+        # Método para ejecutar un archivo con código
+
         
         with open(archivo,'r') as file:
             lineas = file.readlines()
@@ -20,6 +24,8 @@ class Interprete:
             sys.exit()        
 
     def ejecutarPrompt(self):
+        # Método para ejecutar el prompt del intérprete
+        
         lineas=[]
         while True:
             try:
@@ -32,14 +38,20 @@ class Interprete:
             self.ejecutar(lineas)
 
     def error(self,linea,mensaje):
+        # Método para reportar un error encontrado durante la ejecución del código
+
         self.reportar(linea,"",mensaje)
 
     def reportar(self,linea,donde,mensaje):
+        # Método para reportar información al usuario durante la ejecución del código
+
         print(f"[linea {linea}] Error {donde}: {mensaje}")
         pass
 
 
     def ejecutar(self,source):
+        # Método para ejecutar el código ingresado
+
         self.scanner = scanner.Scanner(source)
         self.tokens = self.scanner.ScanTokens()
 
@@ -50,6 +62,7 @@ class Interprete:
 
 
 def main():
+    # Función principal del intérprete
     interprete = Interprete()
 
     if len(sys.argv) > 2:
