@@ -7,9 +7,7 @@ class Scanner:
         self.source = source
         self.__linea = 1
         self.tokens = []
-        ##lista de tokens
         self.palabras_reservadas = {
-            # "palabra" - "tipo token" 
             "y" : TipoToken.Y,
             "clase" : TipoToken.CLASE,
             "ademas" : TipoToken.ADEMAS,
@@ -30,7 +28,6 @@ class Scanner:
     def ScanTokens(self): # -> list[TipoToken]:
         ##Aqui va el scanner
 
-        print(self.source)        
 
         estado = 0
 
@@ -38,9 +35,7 @@ class Scanner:
             current = ""
             line1 = self.clean(line)
             line1 +=" "
-            #print(f"{line1}")
             for char in line1:
-                #print(f"{estado} -> {char}")
                 match estado:
                     case 0:
                         if char == "<":
@@ -160,7 +155,6 @@ class Scanner:
                             estado = 0
                         else:
                             current += char
-                            #estado = 9
                     case 11:
                         if char == "*":
                             estado = 12
@@ -183,7 +177,6 @@ class Scanner:
         estado = 0
         char = 0
         cadena = cadena.replace(" ","")
-        #print(f"*{cadena}*")
         while control:
             match estado:
                 case 0:
@@ -225,7 +218,6 @@ class Scanner:
                 case 2:
                     try:
                         if cadena[char+1].isdigit() or cadena[char+1] == ".":
-                            #print(cadena[char+1])
                             current += cadena[char+1]
                             char +=1
                         elif cadena[char+1] == ",":
@@ -234,7 +226,6 @@ class Scanner:
                             current = ""
                             estado = 0
                         else:
-                            #print(cadena[char+1])
                             clean_str += f" {current}"
                             current = ""
                             char += 1
