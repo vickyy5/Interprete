@@ -26,7 +26,7 @@ class TipoToken(Enum):
     COMA = ","
     PUNTO = "."
     PYCOMA = ";"
-    GUION = "-"
+    MENOS = "-"
     MAS = "+"
     POR = "*"
     ENTRE = "/"

@@ -40,7 +40,7 @@ class Scanner:
             line1 +=" "
             print(f"{line1}")
             for char in line1:
-                print(f"{estado} -> {char}")
+                #print(f"{estado} -> {char}")
                 match estado:
                     case 0:
                         if char == "<":
@@ -57,6 +57,29 @@ class Scanner:
                             estado = 5
                         elif char == "/":
                             estado = 6
+                        elif char == "{":
+                            self.tokens.append(Token(TipoToken.ALLAVE,"{",None,self.__linea))
+                            estado = 0
+                        elif char == "}":
+                            self.tokens.append(Token(TipoToken.CLLAVE,"}",None,self.__linea))
+                            estado = 0
+                        elif char == "(":
+                            self.tokens.append(Token(TipoToken.APARE,"(",None,self.__linea))
+                            estado = 0
+                        elif char == ")":
+                            self.tokens.append(Token(TipoToken.CPARE,")",None,self.__linea))
+                            estado = 0
+                        elif char == "+":
+                            self.tokens.append(Token(TipoToken.MAS,"+",None,self.__linea))
+                            estado = 0
+                        elif char == "-":
+                            self.tokens.append(Token(TipoToken.MENOR,"-",None,self.__linea))
+                            estado = 0
+                        elif char == "*":
+                            self.tokens.append(Token(TipoToken.POR,"*",None,self.__linea))
+                            estado = 0
+                        elif char == "!":
+                            estado = 8
                         else:
                             pass
                     case 1:
@@ -102,17 +125,22 @@ class Scanner:
                                 estado = 0
                     case 6:
                         if char == "/":
-                            #print("2 slash")
                             estado = 7
                         else:
-                            #print("1 slash")
                             self.tokens.append(Token(TipoToken.ENTRE,"/",None,self.__linea))
+                            estado = 0
                     case 7:
                         if char == "\n":
-                            print("Found break")
                             estado = 0
                         else:
                             estado = 7
+                    case 8:
+                        if char == "=":
+                            self.tokens.append(Token(TipoToken.DIFF,"!=",None,self.__linea))
+                            estado = 0
+                        else:
+                            self.tokens.append(Token(TipoToken.NEGA,"!",None,self.__linea))
+                            estado = 0
 
             self.__linea += 1
                         
@@ -193,12 +221,8 @@ class Scanner:
                             estado = 0
                     except:
                         control = False
-            #print(f"{clean_str} estado={estado}")
             
-        #print(f"{clean_str} estado={estado}")
-        #print(clean_str)
         return f"{clean_str}\n"
-        #return clean_str
 
 
 
