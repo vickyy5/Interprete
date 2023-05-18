@@ -1,3 +1,4 @@
+import re
 from tipo_token import TipoToken #Importar la clase TipoToken del módulo tipo_token
 from tokeen import Token #Importar la clase Token del módulo token
 import string  #Importar el módulo string
@@ -174,102 +175,22 @@ class Scanner: #Clase Scanner
     def clean(self,cadena): # Define una función 'clean' que toma una cadena como entrada y devuelve una cadena limpia
         simbolos = ['(', ')' ,'{' ,'}', '=', '<', '>', '!', '+', '-', ';', '*', '/']   # Define una lista de Símbolos
         clean_str = ''
-        current = ''
-        control = True
-        self.estado = 0
-        char = 0
-        cadena = cadena.replace(" ","") # Reemplaza los espacios en blanco por nada
-        while control: #Mientras que 'control' sea verdadero
-            match self.estado: #Define un bloque 'match' que depende del estado actual
-                case 0:
-                    try:
-                        if cadena[char] in simbolos: #Si el carácter actual está en la lista de símbolos
-                            current = cadena[char] #establece la cadena actual al carácter actual
-                            self.estado = 1 #establece el estado a 1
-                        elif cadena[char].isdigit():
-                            current = cadena[char]
-                            self.estado = 2
-                        elif cadena[char].isalpha():
-                            current += cadena[char]
-                            self.estado = 3
-                        elif cadena[char] == '"':
-                            current += cadena[char]
-                            self.estado = 4
-                        else:
-                            control = False # Si no es ni símbolo, dígito ni letra, se acaba el bucle
-                    except:
-                        control = False
-                case 1:# Estado 1: se ha encontrado un símbolo
-                    try:
-                        # Si el siguiente caracter de 'cadena' también es un símbolo, se agrega al símbolo actual
-                        if cadena[char+1] in simbolos:
-                            current += cadena[char+1]
-                            char +=1
-                            self.estado = 1
-                        else:
-                            clean_str += f" {current}" # Si no hay más símbolos adyacentes, se agrega el símbolo actual a 'clean_str'
-                            current = "" # Se reinicia la cadena temporal
-                            char += 1 # Se incrementa el índice de 'cadena'
-                            self.estado = 0 # Se regresa al estado 0 para procesar el siguiente caracter
-                    except:
-                        clean_str += f" {current} " # Si se llega al final de 'cadena', se agrega el símbolo actual a 'clean_str'
-                        current = ""
-                        char += 1
-                        self.estado = 0
-                        control = False
-                # Estado 2: se ha encontrado un dígito
-                case 2:
-                    try:
-                        if cadena[char+1].isdigit() or cadena[char+1] == ".": # Si el siguiente caracter es un dígito o un punto
-                            current += cadena[char+1] # Se agrega el caracter actual a la cadena current
-                            char +=1 # Se agrega el caracter actual a la cadena current
-                        elif cadena[char+1] == ",": # Se agrega el caracter actual a la cadena current
-                            clean_str += f" {current} ,"  # Se agrega el caracter actual a la cadena current
-                            char += 2 # Se agrega el caracter actual a la cadena current
-                            current = "" # Se agrega el caracter actual a la cadena current
-                            self.estado = 0 # Se reinicia el valor del atributo "estado" a 0
-                        else:
-                            clean_str += f" {current}"
-                            current = ""
-                            char += 1
-                            self.estado = 0
-                    except:
-                        clean_str += f" {current}"
-                        current = ""
-                        char += 1
-                        self.estado = 0
-                        control = False
-                        # Estado 3: se ha encontrado una letra
-                case 3:
-                    try:
-                        if cadena[char+1].isalpha() or cadena[char+1].isdigit():  # Si el siguiente caracter es una letra o un dígito
-                            current += cadena[char+1] # Se agrega el caracter actual a la cadena current
-                            char += 1  # Se aumenta el índice del caracter actual en 1
-                        elif cadena[char+1] == ",": # Si el siguiente caracter es una ,
-                            clean_str += f" {current} ,"
-                            char += 2
-                            current = ""
-                            self.estado = 0
-                        else:
-                            clean_str += f" {current} "
-                            current = ""
-                            char += 1
-                            self.estado = 0
-                    except:
-                        control = False
-                case 4: # Estado 3: se ha encontrado un "
-                    try: 
-                        if cadena[char+1] != '"': # Si el siguiente caracter es diferente de un "
-                            current += cadena[char+1] # seguir avanzando
-                            char +=1
-                        else:
-                            clean_str += f' {current}" '
-                            current = ""
-                            char +=1
-                            self.estado = 0
-                    except:
-                        control = False
-            
+
+        pattern = r'\/\/.*|\/\*[\s\S]*?\*\/|([A-Za-z_][A-Za-z0-9_]*|\d+(?:\.\d+)?|\S)'
+        result = re.findall(pattern, cadena)    
+        
+        clean_str = " ".join(result)
+
+        
+
+        clean_str=clean_str.replace("/ *","/*")
+        clean_str=clean_str.replace("* /","*/")
+        clean_str=clean_str.replace("> =",">=")
+        clean_str=clean_str.replace("< =","<=")
+        clean_str=clean_str.replace("= =","==")
+
+        print(clean_str)
+
         return f"{clean_str}\n"
 
         
