@@ -17,7 +17,7 @@ class Parser:
             msg = f"Token inesperado: {self.preanalysis.type}"
             Interprete.error(self.preanalysis.line, msg)
         elif not self.errors and self.preanalysis.type == TipoToken.EOF:
-            print("ok")
+            print("Expresion Valida")
     
     def PROGRAM(self):
         if (self.preanalysis.type == TipoToken.CLASS or self.preanalysis.type == TipoToken.FUN or
