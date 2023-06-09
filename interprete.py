@@ -1,7 +1,8 @@
-import scanner
-import tipo_token
-import tokeen
 import sys
+from scanner import Scanner
+from tokeen import Token
+from tipo_token import TipoToken
+from parser import Parser
 
 class Interprete:
     # Clase principal del intérprete
@@ -37,27 +38,25 @@ class Interprete:
                 continue 
             self.ejecutar(lineas)
 
-    def error(self,linea,mensaje):
+    def error(linea,msj):
         # Método para reportar un error encontrado durante la ejecución del código
+        print(f'[line {linea}] | {msj}')
+        pass
+        # self.report(self, msg, lin)
 
-        self.reportar(linea,"",mensaje)
 
     def reportar(self,linea,donde,mensaje):
         # Método para reportar información al usuario durante la ejecución del código
-
-        print(f"[linea {linea}] Error {donde}: {mensaje}")
         pass
 
 
     def ejecutar(self,source):
         # Método para ejecutar el código ingresado
 
-        self.scanner = scanner.Scanner(source)
+        self.scanner = Scanner(source)
         self.tokens = self.scanner.ScanTokens()
-
-        for token in self.tokens:
-            print(token)
-
+        self.parser = Parser(self.tokens)
+        self.parser.parse()
 
 
 

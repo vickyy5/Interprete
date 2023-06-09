@@ -10,21 +10,20 @@ class Scanner: #Clase Scanner
         self.tokens = []  #Asignar el atributo tokens a la instancia de la clase, con una lista vacía como valor inicial
         self.palabras_reservadas = { # Diccionario con las palabras reservadas y su tipo de token correspondiente
             # "palabra" - "tipo token" 
-            "y" : TipoToken.Y,
-            "clase" : TipoToken.CLASE,
-            "ademas" : TipoToken.ADEMAS,
-            "falso" : TipoToken.FALSO,
-            "para" : TipoToken.PARA,
-            "fun" : TipoToken.FUN,
-            "si" : TipoToken.SI,
-            "nulo" : TipoToken.NULO,
-            "imprimir" : TipoToken.IMPRIMIR,
-            "retornar" : TipoToken.RETORNAR,
-            "super" : TipoToken.SUPER,
-            "este" : TipoToken.ESTE,
-            "verdadero" : TipoToken.VERDADERO,
-            "var" : TipoToken.VAR,
-            "mientras" : TipoToken.MIENTRAS
+            'and': TipoToken.AND,
+            'class': TipoToken.CLASS,
+            'also': TipoToken.ALSO,
+            'for': TipoToken.FOR,
+            'fun' : TipoToken.FUN,
+            'if' : TipoToken.IF,
+            'null' : TipoToken.NULL,
+            'print' : TipoToken.PRINT,
+            'return' : TipoToken.RETURN,
+            'super' : TipoToken.SUPER,
+            'this' : TipoToken.THIS,
+            'true' : TipoToken.TRUE,
+            'var' : TipoToken.VAR,
+            'while' : TipoToken.WHILE,
         } 
 
     def ScanTokens(self): # -> list[TipoToken]:
@@ -56,25 +55,25 @@ class Scanner: #Clase Scanner
                         elif char == "/":
                             self.estado = 6
                         elif char == "{": # Si el caracter actual es "{", se agrega un token de tipo TipoToken.ALLAVE a la lista tokens, y se cambia el valor de estado a 0
-                            self.tokens.append(Token(TipoToken.ALLAVE,"{",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.BRACKET_OPEN,"{",None,self.__linea))
                             self.estado = 0
                         elif char == "}":
-                            self.tokens.append(Token(TipoToken.CLLAVE,"}",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.BRACKET_CLOSE,"}",None,self.__linea))
                             self.estado = 0
                         elif char == "(":
-                            self.tokens.append(Token(TipoToken.APARE,"(",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.PARENT_OPEN,"(",None,self.__linea))
                             self.estado = 0
                         elif char == ")":
-                            self.tokens.append(Token(TipoToken.CPARE,")",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.PARENT_CLOSE,")",None,self.__linea))
                             self.estado = 0
                         elif char == "+":
-                            self.tokens.append(Token(TipoToken.MAS,"+",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.SUB,"+",None,self.__linea))
                             self.estado = 0
                         elif char == "-":
-                            self.tokens.append(Token(TipoToken.MENOR,"-",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.SUB,"-",None,self.__linea))
                             self.estado = 0
                         elif char == "*":
-                            self.tokens.append(Token(TipoToken.POR,"*",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.MULT,"*",None,self.__linea))
                             self.estado = 0
                         elif char == "!":
                             self.estado = 8
@@ -82,40 +81,40 @@ class Scanner: #Clase Scanner
                             current += char
                             self.estado = 9
                         elif char == ";":
-                            self.tokens.append(Token(TipoToken.PYCOMA,";",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.SEMICOLON,";",None,self.__linea))
                             self.estado = 0
                         elif char == ",":
-                            self.tokens.append(Token(TipoToken.COMA,",",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.COMMA,",",None,self.__linea))
                             self.estado = 0
                         else:# Si el carácter actual no es ninguno de los anteriores: No hacemos nada y pasamos al siguiente carácter.
                             pass
                     case 1: # Si el estado actual es 1:
                         if char == "=":
-                            self.tokens.append(Token(TipoToken.MENORIGUAL,"<=",None,self.__linea)) # Añadimos un nuevo objeto Token a la lista de tokens.
+                            self.tokens.append(Token(TipoToken.LESS_EQUAL,"<=",None,self.__linea)) # Añadimos un nuevo objeto Token a la lista de tokens.
                             self.estado = 0 # Cambiamos el estado del scanner a 0.
                         else:
-                            self.tokens.append(Token(TipoToken.MENOR,"<",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.LESS_THAN,"<",None,self.__linea))
                             self.estado = 0
                     case 2:
                         if char == "=":
-                            self.tokens.append(Token(TipoToken.IGUALQUE,"==",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.EQUAL,"==",None,self.__linea))
                             self.estado = 0
                         else:
-                            self.tokens.append(Token(TipoToken.ASIGNACION,"=",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.ASIGNATION,"=",None,self.__linea))
                             self.estado = 0
                     case 3:
                         if char == "=":
-                            self.tokens.append(Token(TipoToken.MAYORIGUAL,">=",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.GREAT_EQUAL,">=",None,self.__linea))
                             self.estado = 0
                         else:
-                            self.tokens.append(Token(TipoToken.MAYOR,">",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.GREAT,">",None,self.__linea))
                             self.estado=0
                         pass
                     case 4:
                         if char.isdigit() or char == ".":
                             current += char
                         else:
-                            self.tokens.append(Token(TipoToken.NUMERO,current,current,self.__linea))
+                            self.tokens.append(Token(TipoToken.NUMBER,current,current,self.__linea))
                             current = ""
                             self.estado = 0
                     case 5:
@@ -127,7 +126,7 @@ class Scanner: #Clase Scanner
                                 current = ""
                                 self.estado = 0
                             else:
-                                self.tokens.append(Token(TipoToken.IDENTIFICADOR,current,None,self.__linea))
+                                self.tokens.append(Token(TipoToken.IDENTIFIER,current,None,self.__linea))
                                 current = ""
                                 self.estado = 0
                     case 6:
@@ -136,7 +135,7 @@ class Scanner: #Clase Scanner
                         elif char == "*":
                             self.estado = 11
                         else:
-                            self.tokens.append(Token(TipoToken.ENTRE,"/",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.DIAG,"/",None,self.__linea))
                             self.estado = 0
                     case 7:
                         if char == "\n":
@@ -145,15 +144,15 @@ class Scanner: #Clase Scanner
                             self.estado = 7
                     case 8:
                         if char == "=":
-                            self.tokens.append(Token(TipoToken.DIFF,"!=",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.DIFERENT,"!=",None,self.__linea))
                             self.estado = 0
                         else:
-                            self.tokens.append(Token(TipoToken.NEGA,"!",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.NEGATION,"!",None,self.__linea))
                             self.estado = 0
                     case 9:
                         if char == '"':
                             current += char
-                            self.tokens.append(Token(TipoToken.IDENTIFICADOR,current,current[1:-1],self.__linea))
+                            self.tokens.append(Token(TipoToken.IDENTIFIER,current,current[1:-1],self.__linea))
                             current = ""
                             self.estado = 0
                         else:
@@ -189,7 +188,7 @@ class Scanner: #Clase Scanner
         clean_str=clean_str.replace("< =","<=")
         clean_str=clean_str.replace("= =","==")
 
-        print(clean_str)
+        #print(clean_str)
 
         return f"{clean_str}\n"
 
