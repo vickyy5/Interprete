@@ -2,14 +2,17 @@ from typing import List
 from tipo_token import TipoToken
 from tokeen import Token
 
+
 class Parser:
     def __init__(self, tokens: List[Token]):
         self.tokens = tokens
         self.errors = False
         self.preanalysis = None
         self.i = 0
+
     def parse(self):
         from interprete import Interprete
+
         self.preanalysis = self.tokens[self.i]
         self.PROGRAM()
 
@@ -17,23 +20,34 @@ class Parser:
             msg = f"Token inesperado: {self.preanalysis.type}"
             Interprete.error(self.preanalysis.line, msg)
         elif not self.errors and self.preanalysis.type == TipoToken.EOF:
-            print("ok")
-    
+            print("Expresion aceptada")
+
     def PROGRAM(self):
-        if (self.preanalysis.type == TipoToken.CLASS or self.preanalysis.type == TipoToken.FUN or
-            self.preanalysis.type == TipoToken.VAR or self.preanalysis.type == TipoToken.NEGATION or
-            self.preanalysis.type == TipoToken.LESS or self.preanalysis.type == TipoToken.TRUE or
-            self.preanalysis.type == TipoToken.FALSE or self.preanalysis.type == TipoToken.NULL or
-            self.preanalysis.type == TipoToken.THIS or self.preanalysis.type == TipoToken.NUMBER or
-            self.preanalysis.type == TipoToken.STRING or self.preanalysis.type == TipoToken.IDENTIFIER or
-            self.preanalysis.type == TipoToken.PARENT_OPEN or self.preanalysis.type == TipoToken.SUPER or
-            self.preanalysis.type == TipoToken.FOR or self.preanalysis.type == TipoToken.IF or
-            self.preanalysis.type == TipoToken.PRINT or self.preanalysis.type == TipoToken.RETURN or
-            self.preanalysis.type == TipoToken.WHILE or self.preanalysis.type == TipoToken.BRACKET_OPEN or 
-            self.preanalysis.type == TipoToken.GREAT
+        if (
+            self.preanalysis.type == TipoToken.CLASS
+            or self.preanalysis.type == TipoToken.FUN
+            or self.preanalysis.type == TipoToken.VAR
+            or self.preanalysis.type == TipoToken.NEGATION
+            or self.preanalysis.type == TipoToken.LESS
+            or self.preanalysis.type == TipoToken.TRUE
+            or self.preanalysis.type == TipoToken.FALSE
+            or self.preanalysis.type == TipoToken.NULL
+            or self.preanalysis.type == TipoToken.THIS
+            or self.preanalysis.type == TipoToken.NUMBER
+            or self.preanalysis.type == TipoToken.STRING
+            or self.preanalysis.type == TipoToken.IDENTIFIER
+            or self.preanalysis.type == TipoToken.PARENT_OPEN
+            or self.preanalysis.type == TipoToken.SUPER
+            or self.preanalysis.type == TipoToken.FOR
+            or self.preanalysis.type == TipoToken.IF
+            or self.preanalysis.type == TipoToken.PRINT
+            or self.preanalysis.type == TipoToken.RETURN
+            or self.preanalysis.type == TipoToken.WHILE
+            or self.preanalysis.type == TipoToken.BRACKET_OPEN
+            # or self.preanalysis.type == TipoToken.GREAT
         ):
             self.DECLARATION()
-    
+
     def DECLARATION(self):
         if self.errors:
             return
@@ -47,21 +61,31 @@ class Parser:
             self.VAR_DECL()
             self.DECLARATION()
         elif (
-            self.preanalysis.type == TipoToken.NEGATION or self.preanalysis.type == TipoToken.LESS or
-            self.preanalysis.type == TipoToken.TRUE or self.preanalysis.type == TipoToken.FALSE or
-            self.preanalysis.type == TipoToken.NULL or self.preanalysis.type == TipoToken.THIS or
-            self.preanalysis.type == TipoToken.NUMBER or self.preanalysis.type == TipoToken.STRING or
-            self.preanalysis.type == TipoToken.IDENTIFIER or self.preanalysis.type == TipoToken.PARENT_OPEN or
-            self.preanalysis.type == TipoToken.SUPER or self.preanalysis.type == TipoToken.FOR or
-            self.preanalysis.type == TipoToken.IF or self.preanalysis.type == TipoToken.PRINT or
-            self.preanalysis.type == TipoToken.RETURN or self.preanalysis.type == TipoToken.WHILE or
-            self.preanalysis.type == TipoToken.BRACKET_OPEN or self.preanalysis.type == TipoToken.GREAT
+            self.preanalysis.type == TipoToken.NEGATION
+            or self.preanalysis.type == TipoToken.LESS
+            or self.preanalysis.type == TipoToken.TRUE
+            or self.preanalysis.type == TipoToken.FALSE
+            or self.preanalysis.type == TipoToken.NULL
+            or self.preanalysis.type == TipoToken.THIS
+            or self.preanalysis.type == TipoToken.NUMBER
+            or self.preanalysis.type == TipoToken.STRING
+            or self.preanalysis.type == TipoToken.IDENTIFIER
+            or self.preanalysis.type == TipoToken.PARENT_OPEN
+            or self.preanalysis.type == TipoToken.SUPER
+            or self.preanalysis.type == TipoToken.FOR
+            or self.preanalysis.type == TipoToken.IF
+            or self.preanalysis.type == TipoToken.PRINT
+            or self.preanalysis.type == TipoToken.RETURN
+            or self.preanalysis.type == TipoToken.WHILE
+            or self.preanalysis.type == TipoToken.BRACKET_OPEN
+            or self.preanalysis.type == TipoToken.GREAT
         ):
             self.STATEMENT()
             self.DECLARATION()
 
     def CLASS_DECL(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.CLASS:
@@ -75,9 +99,10 @@ class Parser:
             self.errors = True
             msg = f"No se esperaba el token: {self.preanalysis.type}"
             Interprete.error(self.preanalysis.line, msg)
-    
+
     def CLASS_INHER(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.LESS_THAN:
@@ -86,6 +111,7 @@ class Parser:
 
     def FUN_DECL(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.FUN:
@@ -98,6 +124,7 @@ class Parser:
 
     def VAR_DECL(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.VAR:
@@ -113,6 +140,7 @@ class Parser:
 
     def VAR_INIT(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.ASIGNATION:
@@ -121,11 +149,23 @@ class Parser:
 
     def STATEMENT(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS,TipoToken.GREAT, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.GREAT,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+        ]:
             self.EXPR_STMT()
         elif self.preanalysis.type == TipoToken.FOR:
             self.FOR_STMT()
@@ -142,15 +182,27 @@ class Parser:
         else:
             self.errors = True
             msg = f"No se esperaba el token: {self.preanalysis.type}"
-            Interprete.error(self.preanalysis.line, msg)   
+            Interprete.error(self.preanalysis.line, msg)
 
     def EXPR_STMT(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS,TipoToken.GREAT, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.GREAT,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+        ]:
             self.EXPRESSION()
             self.matchToken(TipoToken.SEMICOLON)
         else:
@@ -160,6 +212,7 @@ class Parser:
 
     def FOR_STMT(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.FOR:
@@ -177,13 +230,25 @@ class Parser:
 
     def FOR_STMT_1(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.VAR:
             self.VAR_DECL()
-        elif self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS,TipoToken.GREAT, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER]:
+        elif self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.GREAT,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+        ]:
             self.EXPR_STMT()
         elif self.preanalysis.type == TipoToken.SEMICOLON:
             self.matchToken(TipoToken.SEMICOLON)
@@ -194,11 +259,23 @@ class Parser:
 
     def FOR_STMT_2(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS,TipoToken.GREAT, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.GREAT,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+        ]:
             self.EXPRESSION()
             self.matchToken(TipoToken.SEMICOLON)
         elif self.preanalysis.type == TipoToken.SEMICOLON:
@@ -207,18 +284,31 @@ class Parser:
             self.errors = True
             msg = f"No se esperaba el token: {self.preanalysis.type}"
             Interprete.error(self.preanalysis.line, msg)
-    
+
     def FOR_STMT_3(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS,TipoToken.GREAT, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.GREAT,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+        ]:
             self.EXPRESSION()
 
     def IF_STMT(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.IF:
@@ -235,6 +325,7 @@ class Parser:
 
     def ELSE_STATEMENT(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.ELSE:
@@ -243,6 +334,7 @@ class Parser:
 
     def PRINT_STMT(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.PRINT:
@@ -256,6 +348,7 @@ class Parser:
 
     def RETURN_STMT(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.RETURN:
@@ -269,15 +362,28 @@ class Parser:
 
     def RETURN_EXP_OPC(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS,TipoToken.GREAT, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.GREAT,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+        ]:
             self.EXPRESSION()
 
     def WHILE_STMT(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.WHILE:
@@ -293,6 +399,7 @@ class Parser:
 
     def BLOCK(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.BRACKET_OPEN:
@@ -306,23 +413,54 @@ class Parser:
 
     def BLOCK_DECL(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.CLASS, TipoToken.FUN, TipoToken.VAR, TipoToken.NEGATION,
-                                TipoToken.LESS,TipoToken.GREAT, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER, TipoToken.FOR, TipoToken.IF,
-                                TipoToken.PRINT, TipoToken.RETURN, TipoToken.WHILE, TipoToken.BRACKET_OPEN]:
+        if self.preanalysis.type in [
+            TipoToken.CLASS,
+            TipoToken.FUN,
+            TipoToken.VAR,
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.GREAT,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+            TipoToken.FOR,
+            TipoToken.IF,
+            TipoToken.PRINT,
+            TipoToken.RETURN,
+            TipoToken.WHILE,
+            TipoToken.BRACKET_OPEN,
+        ]:
             self.DECLARATION()
             self.BLOCK_DECL()
 
     def EXPRESSION(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER,TipoToken.GREAT]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+            TipoToken.GREAT,
+        ]:
             self.ASSIGNMENT()
         else:
             self.errors = True
@@ -331,11 +469,23 @@ class Parser:
 
     def ASSIGNMENT(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER,TipoToken.GREAT]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+            TipoToken.GREAT,
+        ]:
             self.LOGIC_OR()
             self.ASSIGNMENT_OPC()
         else:
@@ -345,6 +495,7 @@ class Parser:
 
     def ASSIGNMENT_OPC(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.ASIGNATION:
@@ -353,11 +504,23 @@ class Parser:
 
     def LOGIC_OR(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER,TipoToken.GREAT]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+            TipoToken.GREAT,
+        ]:
             self.LOGIC_AND()
             self.LOGIC_OR_2()
         else:
@@ -367,6 +530,7 @@ class Parser:
 
     def LOGIC_OR_2(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.OR:
@@ -376,11 +540,23 @@ class Parser:
 
     def LOGIC_AND(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER,TipoToken.GREAT]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+            TipoToken.GREAT,
+        ]:
             self.EQUALITY()
             self.LOGIC_AND_2()
         else:
@@ -390,6 +566,7 @@ class Parser:
 
     def LOGIC_AND_2(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.AND:
@@ -399,11 +576,23 @@ class Parser:
 
     def EQUALITY(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER,TipoToken.GREAT]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+            TipoToken.GREAT,
+        ]:
             self.COMPARISON()
             self.EQUALITY_2()
         else:
@@ -413,6 +602,7 @@ class Parser:
 
     def EQUALITY_2(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.DIFERENT:
@@ -426,11 +616,23 @@ class Parser:
 
     def COMPARISON(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER,TipoToken.GREAT]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+            TipoToken.GREAT,
+        ]:
             self.TERM()
             self.COMPARISON_2()
         else:
@@ -440,6 +642,7 @@ class Parser:
 
     def COMPARISON_2(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.GREAT_THAN:
@@ -461,11 +664,23 @@ class Parser:
 
     def TERM(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER,TipoToken.GREAT]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+            TipoToken.GREAT,
+        ]:
             self.FACTOR()
             self.TERM_2()
         else:
@@ -475,6 +690,7 @@ class Parser:
 
     def TERM_2(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.LESS:
@@ -496,11 +712,23 @@ class Parser:
 
     def FACTOR(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER,TipoToken.GREAT]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+            TipoToken.GREAT,
+        ]:
             self.UNARY()
             self.FACTOR_2()
         else:
@@ -510,6 +738,7 @@ class Parser:
 
     def FACTOR_2(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.DIAG:
@@ -523,6 +752,7 @@ class Parser:
 
     def UNARY(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.NEGATION:
@@ -534,8 +764,17 @@ class Parser:
         elif self.preanalysis.type == TipoToken.GREAT:
             self.matchToken(TipoToken.GREAT)
             self.UNARY()
-        elif self.preanalysis.type in [TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL, TipoToken.THIS, TipoToken.NUMBER,
-                                TipoToken.STRING, TipoToken.IDENTIFIER, TipoToken.PARENT_OPEN, TipoToken.SUPER]:
+        elif self.preanalysis.type in [
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+        ]:
             self.CALL()
         else:
             self.errors = True
@@ -544,10 +783,20 @@ class Parser:
 
     def CALL(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL, TipoToken.THIS, TipoToken.NUMBER,
-                                TipoToken.STRING, TipoToken.IDENTIFIER, TipoToken.PARENT_OPEN, TipoToken.SUPER]:
+        if self.preanalysis.type in [
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+        ]:
             self.PRIMARY()
             self.CALL_2()
         else:
@@ -557,6 +806,7 @@ class Parser:
 
     def CALL_2(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.PARENT_OPEN:
@@ -568,9 +818,10 @@ class Parser:
             self.matchToken(TipoToken.DOT)
             self.matchToken(TipoToken.IDENTIFIER)
             self.CALL_2()
-    
+
     def PRIMARY(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.TRUE:
@@ -602,6 +853,7 @@ class Parser:
 
     def FUNCTION(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.IDENTIFIER:
@@ -618,6 +870,7 @@ class Parser:
 
     def FUNCTIONS(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.IDENTIFIER:
@@ -626,6 +879,7 @@ class Parser:
 
     def PARAMETERS_OPC(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.IDENTIFIER:
@@ -633,6 +887,7 @@ class Parser:
 
     def jump_op(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.jump:
@@ -640,6 +895,7 @@ class Parser:
 
     def jump_par(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.jump:
@@ -647,11 +903,11 @@ class Parser:
         else:
             self.errors = True
             msg = f"No se esperaba el token: {self.preanalysis.type}"
-            Interprete.error(self.preanalysis.line, msg)        
-        
+            Interprete.error(self.preanalysis.line, msg)
 
     def PARAMETERS(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.IDENTIFIER:
@@ -664,6 +920,7 @@ class Parser:
 
     def PARAMETERS_2(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.COMMA:
@@ -673,20 +930,44 @@ class Parser:
 
     def ARGUMENTS_OPC(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER,TipoToken.GREAT]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+            TipoToken.GREAT,
+        ]:
             self.ARGUMENTS()
 
     def ARGUMENTS(self):
         from interprete import Interprete
+
         if self.errors:
             return
-        if self.preanalysis.type in [TipoToken.NEGATION, TipoToken.LESS,TipoToken.GREAT, TipoToken.TRUE, TipoToken.FALSE, TipoToken.NULL,
-                                TipoToken.THIS, TipoToken.NUMBER, TipoToken.STRING, TipoToken.IDENTIFIER,
-                                TipoToken.PARENT_OPEN, TipoToken.SUPER]:
+        if self.preanalysis.type in [
+            TipoToken.NEGATION,
+            TipoToken.LESS,
+            TipoToken.GREAT,
+            TipoToken.TRUE,
+            TipoToken.FALSE,
+            TipoToken.NULL,
+            TipoToken.THIS,
+            TipoToken.NUMBER,
+            TipoToken.STRING,
+            TipoToken.IDENTIFIER,
+            TipoToken.PARENT_OPEN,
+            TipoToken.SUPER,
+        ]:
             self.EXPRESSION()
             self.ARGUMENTS_2()
         else:
@@ -696,6 +977,7 @@ class Parser:
 
     def ARGUMENTS_2(self):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == TipoToken.COMMA:
@@ -705,6 +987,7 @@ class Parser:
 
     def matchToken(self, t):
         from interprete import Interprete
+
         if self.errors:
             return
         if self.preanalysis.type == t:

@@ -24,6 +24,7 @@ class Scanner: #Clase Scanner
             'true' : TipoToken.TRUE,
             'var' : TipoToken.VAR,
             'while' : TipoToken.WHILE,
+            'else': TipoToken.ELSE
         } 
 
     def ScanTokens(self): # -> list[TipoToken]:

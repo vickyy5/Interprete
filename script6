@@ -1,4 +1,0 @@
-var nombre = "Hola mundo"
-fun presentarse(){
-    print nombre;
-}

@@ -1,4 +1,5 @@
-if(a<123){
-    print a;
+var edad = 18;
+if (edad >= 18) {
+    print edad;
+    print 18;
 }
-
