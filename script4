@@ -1,0 +1,6 @@
+var edad = 0;
+while (edad < 5) {
+    print "win";
+    edad = edad+1;
+}
+

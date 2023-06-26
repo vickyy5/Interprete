@@ -1,8 +1,11 @@
 #!/usr/local/bin/python3.11
 import sys
 from scanner import Scanner
-from parser import Parser
+from parserr import Parser
 from postfixgen import Postfix
+from nodo import Nodo
+from generadorAST import GeneradorAST
+from tablasimbolos import init
 
 
 class Interprete:
@@ -53,20 +56,25 @@ class Interprete:
 
         self.scanner = Scanner(source)
         self.tokens = self.scanner.ScanTokens()
-        # self.parser = Parser(self.tokens)
-        # self.parser.parse()
+        self.parser = Parser(self.tokens)
+        self.parser.parse()
         #for i in self.tokens:
         #    print(f"{i}")
+        #print("****")
         self.postfix = Postfix(self.tokens)
-        postfija = self.postfix.convertir()
-
-        for i in postfija:
-            print(i)
+        self.postfija = self.postfix.convertir()
+        #for i in self.postfija:
+        #    print(i)
+        #print("-----")
+        self.genAst = GeneradorAST(self.postfija)
+        self.programa = self.genAst.generarAST()
+        self.programa.recorrer()
 
 
 def main():
     # Función principal del intérprete
     interprete = Interprete()
+    init()
 
     if len(sys.argv) > 2:
         print("Uso: interprete [script]")

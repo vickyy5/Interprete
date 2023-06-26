@@ -32,9 +32,8 @@ class Postfix:
 
     def convertir(self):
         estructuraDeControl = False
-        stack_Estruc:list[Token] = []
-        auxfor = 0
-
+        stack_Estruc = []
+        #self.simbolos.asignar("a",10)
         for index,t in enumerate(self.infija):
             if t.type == TipoToken.EOF:
                 break
@@ -51,9 +50,8 @@ class Postfix:
             elif t.type == TipoToken.PARENT_CLOSE:
                 #print(f"{estructuraDeControl} y {self.stackk[-1].type}")
                 while( ( len(self.stackk) != 0) and (self.stackk[-1].type != TipoToken.PARENT_OPEN) ):
-                    #if estructuraDeControl:
-                        #if stack_Estruc[-1].type == TipoToken.FOR:
                     temp = self.stackk.pop()
+                    #print(f"{temp}")
                     self.postfija.append(temp)
                 if self.stackk[-1].type == TipoToken.PARENT_OPEN:
                     self.stackk.pop()
@@ -68,12 +66,6 @@ class Postfix:
                 self.stackk.append(t)
             elif t.type == TipoToken.SEMICOLON:
                 while len(self.stackk) !=0 and self.stackk[-1].type != TipoToken.BRACKET_OPEN:
-                    if estructuraDeControl:
-                        if stack_Estruc[-1].type == TipoToken.FOR: #and auxfor <2:
-                            temp = self.stackk.pop()
-                            self.postfija.append(temp)
-                            break
-                        pass
                     temp = self.stackk.pop()
                     self.postfija.append(temp)
                 self.postfija.append(t) 

@@ -1,0 +1,9 @@
+var x="win";
+
+for(var i=0; i<5; i=i+1){
+  if(true){
+    if(true){
+        print x;
+    }
+  }
+}

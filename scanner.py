@@ -24,7 +24,10 @@ class Scanner: #Clase Scanner
             'true' : TipoToken.TRUE,
             'var' : TipoToken.VAR,
             'while' : TipoToken.WHILE,
-            'else': TipoToken.ELSE
+            'else': TipoToken.ELSE,
+            'true': TipoToken.TRUE,
+            'false': TipoToken.FALSE,
+            'or': TipoToken.OR
         } 
 
     def ScanTokens(self): # -> list[TipoToken]:
@@ -68,7 +71,7 @@ class Scanner: #Clase Scanner
                             self.tokens.append(Token(TipoToken.PARENT_CLOSE,")",None,self.__linea))
                             self.estado = 0
                         elif char == "+":
-                            self.tokens.append(Token(TipoToken.SUB,"+",None,self.__linea))
+                            self.tokens.append(Token(TipoToken.ADD,"+",None,self.__linea))
                             self.estado = 0
                         elif char == "-":
                             self.tokens.append(Token(TipoToken.SUB,"-",None,self.__linea))
@@ -115,7 +118,7 @@ class Scanner: #Clase Scanner
                         if char.isdigit() or char == ".":
                             current += char
                         else:
-                            self.tokens.append(Token(TipoToken.NUMBER,current,current,self.__linea))
+                            self.tokens.append(Token(TipoToken.NUMBER,current,float(current),self.__linea))
                             current = ""
                             self.estado = 0
                     case 5:
@@ -123,9 +126,19 @@ class Scanner: #Clase Scanner
                             current += char
                         else:
                             if current in self.palabras_reservadas:
-                                self.tokens.append(Token(self.palabras_reservadas[current],current,None,self.__linea))
-                                current = ""
-                                self.estado = 0
+                                #print(f"{current}")
+                                if current.lower() == "true":
+                                    self.tokens.append(Token(TipoToken.TRUE,current,True,self.__linea))
+                                    current = ""
+                                    self.estado = 0
+                                elif current.lower() == "false":
+                                    self.tokens.append(Token(TipoToken.FALSE,current,False,self.__linea))
+                                    current = ""
+                                    self.estado = 0
+                                else:
+                                    self.tokens.append(Token(self.palabras_reservadas[current],current,None,self.__linea))
+                                    current = ""
+                                    self.estado = 0
                             else:
                                 self.tokens.append(Token(TipoToken.IDENTIFIER,current,None,self.__linea))
                                 current = ""
@@ -153,7 +166,7 @@ class Scanner: #Clase Scanner
                     case 9:
                         if char == '"':
                             current += char
-                            self.tokens.append(Token(TipoToken.IDENTIFIER,current,current[1:-1],self.__linea))
+                            self.tokens.append(Token(TipoToken.STRING,current,current[2:-2],self.__linea))
                             current = ""
                             self.estado = 0
                         else:
@@ -188,6 +201,7 @@ class Scanner: #Clase Scanner
         clean_str=clean_str.replace("> =",">=")
         clean_str=clean_str.replace("< =","<=")
         clean_str=clean_str.replace("= =","==")
+        clean_str=clean_str.replace("! =","!=")
 
         #print(clean_str)
 

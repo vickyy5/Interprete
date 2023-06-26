@@ -1,7 +1,7 @@
 var edad = 18;
-if (edad >= 18) {
+if (edad >= 20) {
     print edad;
 }
 else{
-    print 18;
+    print 19;
 }

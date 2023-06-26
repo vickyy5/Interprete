@@ -4,7 +4,7 @@ from tokeen import Token
 class Nodo:
     def __init__(self, value: Token) -> None:
         self.value = value
-        self.hijos = None
+        self.hijos:list[Nodo] = None
         pass
 
     def insertar_hijo(self, n):
@@ -24,6 +24,5 @@ class Nodo:
     def insertar_hijos(self,nodosHijos):
         if self.hijos is None:
             self.hijos = []
-        else:
-            self.hijos.extend(nodosHijos)
+        self.hijos.extend(nodosHijos)
 
